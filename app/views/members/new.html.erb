@@ -1,0 +1,13 @@
+<h1>New Member</h1>
+
+<div>
+  <%= form_for(@member) do |f| %>
+    <%= f.label :name %>:
+    <%= f.text_field :name %>
+    <br/>
+    <%= f.label "Personal Website URL" %>:
+    <%= f.text_field :pws_full_url %>
+    <br/><br/><br/>
+    <%= f.submit "Create Memeber" %>
+  <% end %>
+</div>
