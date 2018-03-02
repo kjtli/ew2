@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
-  resources :members
   
-  root 'members#new'
+  root 'members#index'
+  resources :members
+
 end

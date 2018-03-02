@@ -1,3 +1,17 @@
 <h1><%= @member.name %></h1>
-Personal website URL: <%= @member.pws_full_url %><br/>
-Short URL: <%= @member.pws_short_url %>
+Website URL: <%= @member.pws_full_url %><br/>
+Short URL: <%= @member.pws_short_url %><br/>
+<h2>Headings</h2>
+TODO
+<h2>Friends</h2>
+TODO
+
+<h2>Find Experts</h2>
+<%= form_tag(member_path, :method => "get") do %>
+    <%= text_field_tag :search_text, params[:search_text], :value => '' %>
+    <%= submit_tag "Search" %>
+<% end %>
+
+
+<h2>Search Results</h2>
+TODO
