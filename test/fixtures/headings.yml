@@ -2,8 +2,8 @@
 
 one:
   member: one
-  heading: MyText
+  content: MyText
 
 two:
   member: two
-  heading: MyText
+  content: MyText
