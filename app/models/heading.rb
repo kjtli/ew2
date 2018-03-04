@@ -12,10 +12,10 @@ class Heading < ApplicationRecord
     s_text = args[:search_text]
     member = args[:member]
     if !s_text.blank? && member.present?
-      partial_match = "%#{s_text}%"
+      partial_match = "%#{s_text.downcase}%"
       # todo: pagination
       # investigate what Arel is about...
-      where("content LIKE ? AND member_id != ?", partial_match, member.id)
+      where("lower(content) LIKE ? AND member_id != ?", partial_match, member.id)
     end
   end
   
