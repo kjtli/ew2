@@ -6,4 +6,10 @@ class Member < ApplicationRecord
   validates :name, presence: true
   validates :pws_full_url, presence: true
   
+  def self.find_by_ids(*ids)
+    if ids.any?
+      where(id: ids)
+    end
+  end
+  
 end

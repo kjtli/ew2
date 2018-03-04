@@ -1,0 +1,7 @@
+<ul class="friends">
+  <% @friends_data.each do |fd| %>
+    <li id="friend-<%= fd.id %>">
+      <span class="friend"><%= link_to fd.name, member_path(fd) %></span>
+    </li>
+  <% end %>
+</ul>

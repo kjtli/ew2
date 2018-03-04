@@ -3,5 +3,5 @@
 <% @members.each do |member| %>
   Name: <%= link_to member.name, member_path(member) %><br/>
   Website Short URL: <%= member.pws_short_url %><br/>
-  # of friends: todo<br/><br/>
+  # of friends: <%= member.friends.count %><br/><br/>
 <% end %>

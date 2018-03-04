@@ -2,50 +2,29 @@ class MembersController < ApplicationController
   
   def index
     @members = Member.all
-    # todo - need to get number of friends, if any, for each member from MemberFriend
   end
   
   def new
     @member = Member.new
   end
 
-=begin
-
-1. first query returns all headings that match search text but not owned by current member
-
-SELECT m1.id, m1.name, mh.heading
-FROM MemberHeadings mh
-  JOIN Members m1
-  ON mh.member_id = m1.id
-WHERE mh.heading LIKE "%?%" // ? contains search text; it may need to handle SQL unsafe characters...
-  AND mh.member_id IN
-    (SELECT m2.id
-     FROM Members m2
-     WHERE m2.id != ?);  // ? contains current member id
-
-2. if experts are found, returns experts who are not friends of current member
-
-SELECT m.name, m.id
-FROM Members m
-WHERE m.id IN (?, ?, ...) AND m.id NOT IN  // ? contains expert member ids from first query
-(SELECT mf.friend_id
-FROM MemberFriends mf
-WHERE mf.member_id = ?); // ? contains current member id
-
-=end
-
   def show
     @member = Member.find(params[:id])
-    
-    @s_text = params[:search_text]
-    if @s_text.present?
-      # 1. query MemberHeadings for matching text, get back a list of experts (members), if any, excluding current member.
-      # @all_experts = ...
-      # 2. returns experts who are not friends of current member
-      # @experts
+    @headings = @member.headings
+
+    # get friends, if any.
+    friend_ids = @member.friends.pluck(:friend_id)
+    if friend_ids.any?
+      # get member objects for the friends
+      @friends_data = Member.find_by_ids(friend_ids)
     end
+    
+    # get experts, if any.
+    search_experts({ :search_text => params[:search_text],
+                     :friend_ids => friend_ids })
+                     
   end
-  
+
   def create
     @member = Member.new(member_params)
     # todo - need shorten url gem or web service
@@ -65,4 +44,32 @@ WHERE mf.member_id = ?); // ? contains current member id
     def member_params
       params.require(:member).permit(:name, :pws_full_url)
     end
+    
+    def search_experts(args = {})
+      s_text = args[:search_text]
+      friend_ids = args[:friend_ids]
+      if s_text.present?
+        search_args = { :search_text => s_text, :member => @member}
+        heading_results = Heading.search(search_args)
+        if heading_results.any?
+          @experts = []
+          # process resuts
+          heading_results.each do |hr|
+            hr_member_id = hr.member.id
+            if friend_ids.any?
+              # exclude member's friends
+              if !friend_ids.include?(hr_member_id)
+                @experts << { :member_id => hr_member_id, :name => hr.member.name, :heading => hr.content}
+              end
+            else
+              # member has no friends yet
+              @experts << { :member_id => hr_member_id, :name => hr.member.name, :heading => hr.content}
+            end
+          end
+        else
+          @search_no_results_msg = "No results found"
+        end
+      end
+    end
+
 end

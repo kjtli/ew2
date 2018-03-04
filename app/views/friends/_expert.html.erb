@@ -1,0 +1,9 @@
+<ul class="experts">
+  <% if @experts.any? %>
+    <% @experts.each do |e| %>
+      <li id="expert-<%= e[:member_id] %>">
+        <span class="expert"><%= @member.name + " -> " + e[:name] + " (\"" + e[:heading] + "\")" %></span>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

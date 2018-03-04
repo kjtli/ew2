@@ -1,10 +1,24 @@
-<h1><%= @member.name %></h1>
+<h1><%= @member.name %> Profile </h1>
 Website URL: <%= @member.pws_full_url %><br/>
 Short URL: <%= @member.pws_short_url %><br/>
+
 <h2>Headings</h2>
-TODO
+<% if @headings.any? %>
+    <ul class="headings">
+        <%= render @headings %>
+    </ul>
+<% else %>
+    No headings found
+<% end %>
+
 <h2>Friends</h2>
-TODO
+<% if @friends_data.present? %>
+    <ul class="friends">
+        <%= render 'friends/friend_data.html.erb' %>
+    </ul>
+<% else %>
+    You don't have any friends yet...
+<% end %>
 
 <h2>Find Experts</h2>
 <%= form_tag(member_path, :method => "get") do %>
@@ -14,4 +28,11 @@ TODO
 
 
 <h2>Search Results</h2>
-TODO
+<% if @experts.present? %>
+    <ul class="experts">
+        <%= render 'friends/expert.html.erb' %>
+    </ul>
+<% end %>
+<%= @search_no_results_msg %>
+
+<br/><br/><br/><%= link_to "Back to All Members", root_path %>
