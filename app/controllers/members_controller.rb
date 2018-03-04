@@ -21,9 +21,8 @@ class MembersController < ApplicationController
     end
     
     # search experts, if any.
-    # Notes: per discussion with Dustin, members, who are not friend, do not need a common friend to be
-    #        qualified for the result.  
-    #        e.g. Alan and Claudia are not friend.  Alan -> Claudia ("Dog breeding in Ukraine") is qualified.
+    # Notes: per discussion with Dustin, Members, who are not friends, do not need a common friend to be qualified for search results.  
+    # e.g. Alan -> Claudia ("Dog breeding in Ukraine") instead of Alan -> Bart -> Claudia ("Dog breeding in Ukraine").
     search_experts({ :search_text => params[:search_text],
                      :friend_ids => friend_ids })
                      
