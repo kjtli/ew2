@@ -52,27 +52,23 @@ class MembersController < ApplicationController
     def search_experts(args = {})
       s_text = args[:search_text]
       friend_ids = args[:friend_ids]
+      @experts = []
       if s_text.present?
         search_args = { :search_text => s_text, :member => @member}
         heading_results = Heading.search(search_args)
+        
         if heading_results.any?
-          @experts = []
           # process resuts
           heading_results.each do |hr|
+            puts "hr:" + hr.to_s
             hr_member_id = hr.member.id
-            if friend_ids.any?
-              # exclude member's friends
-              if !friend_ids.include?(hr_member_id)
-                @experts << { :member_id => hr_member_id, :name => hr.member.name, :heading => hr.content}
-              end
-            else
-              # member has no friends yet
-              @experts << { :member_id => hr_member_id, :name => hr.member.name, :heading => hr.content}
-            end
+            next if friend_ids.any? && friend_ids.include?(hr_member_id)
+            @experts << { :member_id => hr_member_id, :name => hr.member.name, :heading => hr.content}
           end
-        else
-          @search_no_results_msg = "No results found"
         end
+        
+        @search_no_results_msg = "No results found" if @experts.blank?
+
       end
     end
 

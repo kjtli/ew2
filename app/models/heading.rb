@@ -15,7 +15,7 @@ class Heading < ApplicationRecord
       partial_match = "%#{s_text.downcase}%"
       # todo: pagination
       # investigate what Arel is about...
-      where("lower(content) LIKE ? AND member_id != ?", partial_match, member.id)
+      where("LOWER(content) LIKE ? AND member_id != ?", partial_match, member.id)
     end
   end
   
