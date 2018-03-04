@@ -4,6 +4,7 @@ class MembersController < ApplicationController
     @members = Member.all
   end
   
+  # disabled for now
   def new
     @member = Member.new
   end
@@ -19,12 +20,16 @@ class MembersController < ApplicationController
       @friends_data = Member.find_by_ids(friend_ids)
     end
     
-    # get experts, if any.
+    # search experts, if any.
+    # Notes: per discussion with Dustin, members, who are not friend, do not need a common friend to be
+    #        qualified for the result.  
+    #        e.g. Alan and Claudia are not friend.  Alan -> Claudia ("Dog breeding in Ukraine") is qualified.
     search_experts({ :search_text => params[:search_text],
                      :friend_ids => friend_ids })
                      
   end
 
+  # todo - not working yet...
   def create
     @member = Member.new(member_params)
     # todo - need shorten url gem or web service
